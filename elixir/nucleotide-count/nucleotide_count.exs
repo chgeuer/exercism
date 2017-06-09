@@ -24,12 +24,12 @@ defmodule NucleotideCount do
   %{?A => 4, ?T => 1, ?C => 0, ?G => 0}
   """
   @spec histogram([char]) :: map
-  def histogram(strand), do: histogram(strand |> to_string, %{ ?A => 0, ?T => 0, ?C => 0, ?G => 0 })
+  def histogram(strand), do: histogram(strand, %{ ?A => 0, ?T => 0, ?C => 0, ?G => 0 })
 
-  defp histogram("", map), do: map
-  defp histogram("A" <> tail, map), do: histogram(tail, map |> Map.update!(?A, &(&1 + 1)))
-  defp histogram("T" <> tail, map), do: histogram(tail, map |> Map.update!(?T, &(&1 + 1)))
-  defp histogram("C" <> tail, map), do: histogram(tail, map |> Map.update!(?C, &(&1 + 1)))
-  defp histogram("G" <> tail, map), do: histogram(tail, map |> Map.update!(?G, &(&1 + 1)))
+  defp histogram('', map), do: map
+  defp histogram('C' ++ tail, map), do: histogram(tail, map |> Map.update!(?C, &(&1 + 1)))
+  defp histogram('T' ++ tail, map), do: histogram(tail, map |> Map.update!(?T, &(&1 + 1)))
+  defp histogram('G' ++ tail, map), do: histogram(tail, map |> Map.update!(?G, &(&1 + 1)))
+  defp histogram('A' ++ tail, map), do: histogram(tail, map |> Map.update!(?A, &(&1 + 1)))
 
 end
