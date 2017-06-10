@@ -17,14 +17,18 @@ defmodule SecretHandshake do
   def commands(code) do
     <<_::27, reverse::1, jump::1, close_your_eyes::1, double_blink::1, wink::1>> = <<code::32>>
 
-    append = fn (val, str, list) -> if val == 1, do: [ str | list ], else: list end
-
-    result = [ ]
-    result = append.(jump, "jump", result)
-    result = append.(close_your_eyes, "close your eyes", result) 
-    result = append.(double_blink, "double blink", result) 
-    result = append.(wink, "wink", result) 
-    if reverse == 0, do: result, else: Enum.reverse(result), else: result
+    [ ] 
+    |> append(jump, "jump") 
+    |> append(close_your_eyes, "close your eyes") 
+    |> append(double_blink, "double blink") 
+    |> append(wink, "wink") 
+    |> reverseIf(reverse)
   end
+  
+  defp append(list, 0, _str), do: list
+  defp append(list, 1, str), do: [ str | list ]
+
+  defp reverseIf(list, 0), do: list
+  defp reverseIf(list, 1), do: Enum.reverse(list)
 end
 
