@@ -15,7 +15,12 @@ defmodule SecretHandshake do
   """
   @spec commands(code :: integer) :: list(String.t())
   def commands(code) do
-    <<_::27, reverse::1, jump::1, close_your_eyes::1, double_blink::1, wink::1>> = <<code::32>>
+    <<_::27, 
+     reverse::1, 
+     jump::1, 
+     close_your_eyes::1, 
+     double_blink::1, 
+     wink::1>> = <<code::32>>
 
     [ ] 
     |> append(jump, "jump") 
@@ -25,7 +30,7 @@ defmodule SecretHandshake do
     |> reverseIf(reverse)
   end
   
-  defp append(list, 0, _str), do: list
+  defp append(list, 0, _), do: list
   defp append(list, 1, str), do: [ str | list ]
 
   defp reverseIf(list, 0), do: list
