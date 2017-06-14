@@ -24,7 +24,7 @@ defmodule PigLatin do
   @spec translate_word(phrase :: String.t()) :: String.t()
   defp translate_word(phrase) do
     cond do
-      phrase |> String.match?(~r/^(thr|sch)/i) -> phrase |> rule3
+      phrase |> String.match?(~r/^(thr|sch|squ)/i) -> phrase |> rule3
       phrase |> String.match?(~r/^(ch|qu|th)/i) -> phrase |> rule2
       phrase |> String.match?(~r/^(yt|xr)/i) -> phrase |> rule0
       phrase |> String.match?(~r/^([bcdfghjklmnpqrstvwxyz])/i) -> phrase |> rule1
