@@ -1,23 +1,20 @@
 defmodule TwelveDays do
-  @prefix1 "On the "
-
   @numbers [
-    "first", "second" , "third", "fourth",
-    "fifth", "sixth", "seventh", "eighth",
-    "ninth", "tenth", "eleventh", "twelfth"
+    "first", "second" , "third", "fourth", "fifth", "sixth", 
+    "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"
   ]
-  def numbers(count) when count > 0 and count <= 12, do: @numbers |> Enum.drop(count - 1) |> Enum.take(1)
-
-  @prefix2 " day of Christmas my true love gave to me, "
+  @spec goods(number :: integer) :: String.t()
+  defp as_written_number(number) when number > 0 and number <= 12, do: @numbers |> Enum.drop(number - 1) |> Enum.take(1)
 
   @goods [
     "a Partridge in a Pear Tree", "two Turtle Doves", "three French Hens", "four Calling Birds", 
     "five Gold Rings", "six Geese-a-Laying", "seven Swans-a-Swimming", "eight Maids-a-Milking", 
     "nine Ladies Dancing", "ten Lords-a-Leaping", "eleven Pipers Piping", "twelve Drummers Drumming"
   ]
-  def goods(1), do: @goods |> Enum.take(1)
-  def goods(count) when count > 1 and count <= 12 do
-    items = @goods |> Enum.drop(1) |> Enum.take(count - 1) |> Enum.reverse |> Enum.join(", ")
+  @spec goods(number :: integer) :: String.t()
+  defp goods(1), do: @goods |> Enum.take(1)
+  defp goods(number) when number > 1 and number <= 12 do
+    items = @goods |> Enum.drop(1) |> Enum.take(number - 1) |> Enum.reverse |> Enum.join(", ")
     lst = @goods |> Enum.take(1)
     "#{ items }, and #{lst}"
   end
@@ -28,7 +25,7 @@ defmodule TwelveDays do
   """
   @spec verse(number :: integer) :: String.t()
   def verse(number) do
-    "#{ @prefix1 }#{ numbers(number) }#{ @prefix2 }#{ goods(number) }."
+    "On the #{ number |> as_written_number } day of Christmas my true love gave to me, #{ number |> goods }."
   end
 
   @doc """
@@ -37,8 +34,8 @@ defmodule TwelveDays do
   """
   @spec verses(starting_verse :: integer, ending_verse :: integer) :: String.t()
   def verses(starting_verse, ending_verse) do
-    x = for n <- starting_verse..ending_verse, do: verse(n)
-    x |> Enum.join("\n")
+    (for n <- starting_verse..ending_verse, do: verse(n))
+    |> Enum.join("\n")
   end
 
   @doc """
@@ -47,4 +44,3 @@ defmodule TwelveDays do
   @spec sing():: String.t()
   def sing, do: verses(1, 12)
 end
-
