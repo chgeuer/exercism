@@ -9,12 +9,16 @@ defmodule Raindrops do
     just pass the number's digits straight through.
   """
   @spec convert(pos_integer) :: String.t
-  def convert(number) when 0 == rem(number, 3) and 0 == rem(number, 5) and 0 == rem(number, 7), do: "PlingPlangPlong"
-  def convert(number) when 0 == rem(number, 3) and 0 == rem(number, 5), do: "PlingPlang"
-  def convert(number) when 0 == rem(number, 3) and 0 == rem(number, 7), do: "PlingPlong"
-  def convert(number) when 0 == rem(number, 5) and 0 == rem(number, 7), do: "PlangPlong"
-  def convert(number) when 0 == rem(number, 3), do: "Pling"
-  def convert(number) when 0 == rem(number, 5), do: "Plang"
-  def convert(number) when 0 == rem(number, 7), do: "Plong"
-  def convert(number), do: number |> to_string
+  def convert(number) do
+    case %{ :three => 0 == rem(number, 3), :five => 0 == rem(number, 5), :seven => 0 == rem(number, 7) } do
+      %{ :three => false, :five => false, :seven => false } -> number |> to_string         
+      %{ :three => true, :five => false, :seven => false } -> "Pling"         
+      %{ :three => false, :five => true, :seven => false } -> "Plang"         
+      %{ :three => false, :five => false, :seven => true } -> "Plong"         
+      %{ :three => true, :five => true, :seven => false } -> "PlingPlang"         
+      %{ :three => true, :five => false, :seven => true } -> "PlingPlong"         
+      %{ :three => false, :five => true, :seven => true } -> "PlangPlong"         
+      %{ :three => true, :five => true, :seven => true } -> "PlingPlangPlong"         
+    end
+  end
 end
