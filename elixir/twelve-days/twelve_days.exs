@@ -4,7 +4,7 @@ defmodule TwelveDays do
     "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"
   ]
   @spec goods(number :: integer) :: String.t()
-  defp as_written_number(number) when number > 0 and number <= 12, do: @numbers |> Enum.drop(number - 1) |> Enum.take(1)
+  defp as_written_number(number) when number > 0 and number <= 12, do: @numbers |> Enum.slice(number - 1, 1)
 
   @goods [
     "a Partridge in a Pear Tree", "two Turtle Doves", "three French Hens", "four Calling Birds", 
@@ -14,7 +14,7 @@ defmodule TwelveDays do
   @spec goods(number :: integer) :: String.t()
   defp goods(1), do: @goods |> Enum.take(1)
   defp goods(number) when number > 1 and number <= 12 do
-    items = @goods |> Enum.drop(1) |> Enum.take(number - 1) |> Enum.reverse |> Enum.join(", ")
+    items = @goods |> Enum.slice(1, number - 1) |> Enum.reverse |> Enum.join(", ")
     lst = @goods |> Enum.take(1)
     "#{ items }, and #{lst}"
   end
