@@ -10,8 +10,13 @@ defmodule Raindrops do
   """
   @spec convert(pos_integer) :: String.t
   def convert(number) do
-    results = %{ :three => 0 == rem(number, 3), :five => 0 == rem(number, 5), :seven => 0 == rem(number, 7) }
-    plingplangplong = "#{if results.three, do: "Pling"}#{if results.five, do: "Plang"}#{if results.seven, do: "Plong"}"
+
+    plingplangplong = [ 
+      "#{if 0 == rem(number, 3), do: "Pling"}", 
+      "#{if 0 == rem(number, 5), do: "Plang"}", 
+      "#{if 0 == rem(number, 7), do: "Plong"}" 
+    ] |> Enum.join
+      
     case plingplangplong do
       "" -> number |> to_string
       _ -> plingplangplong
