@@ -22,7 +22,6 @@ func Convert(n int) string {
 
 	if plingPlangPlong != "" {
 		return plingPlangPlong
-	} else {
-		return strconv.Itoa(n)
 	}
+	return strconv.Itoa(n)
 }
