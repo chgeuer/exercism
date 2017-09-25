@@ -7,24 +7,28 @@ import (
 
 const testVersion = 3
 
+type RuleAndResponse struct {
+	Rule     func(string) bool
+	Response string
+}
+
 func Hey(input string) string {
-	/*
-		"" -> 'Fine. Be that way!'
-		question -> 'Sure.'
-		yell -> 'Whoa, chill out!
-		_ -> 'Whatever.'
-	*/
 	input = strings.Trim(input, " ")
-	if isEmpty(input) {
-		return "Fine. Be that way!"
+
+	ruleAndResponses := [...]RuleAndResponse{
+		{isEmpty, "Fine. Be that way!"},
+		{isShouting, "Whoa, chill out!"},
+		{isQuestion, "Sure."},
+		{func(_ string) bool { return true }, "Whatever."},
 	}
-	if isQuestion(input) {
-		return "Sure."
+
+	for _, ruleAndResponse := range ruleAndResponses {
+		if ruleAndResponse.Rule(input) {
+			return ruleAndResponse.Response
+		}
 	}
-	if isShouting(input) {
-		return "Whoa, chill out!"
-	}
-	return "Whatever."
+
+	return ""
 }
 
 func isEmpty(input string) bool {
@@ -35,15 +39,11 @@ func isQuestion(input string) bool {
 	return strings.HasSuffix(input, "?")
 }
 
-func isUppercase(input string) bool {
-	return strings.ToUpper(input) == input
-}
-
-func isContainsChars(input string) bool {
-	r := regexp.MustCompile("^[\\s01234567890,.-]*$")
-	return !r.Match([]byte(input))
-}
-
 func isShouting(input string) bool {
-	return isUppercase(input) && isContainsChars(input)
+	isUppercase := strings.ToUpper(input) == input
+
+	r := regexp.MustCompile("^[\\s01234567890,.-]*$")
+	isContainsChars := !r.Match([]byte(input))
+
+	return isUppercase && isContainsChars
 }
