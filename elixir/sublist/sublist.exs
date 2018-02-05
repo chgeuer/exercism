@@ -4,23 +4,12 @@ defmodule Sublist do
   and if not whether it is equal or unequal to the second list.
   """
   def compare(a, b) when not is_list(a) or not is_list(b), do: raise("Must provide 2 lists")
-
   def compare(a, b) do
-    diff = (a |> Enum.count()) - (b |> Enum.count())
-
     cond do
-      diff == 0 -> check_equality(a, b)
-      diff > 0 -> if a |> contains(b), do: :superlist, else: :unequal
-      diff < 0 -> if b |> contains(a), do: :sublist, else: :unequal
-    end
-  end
-
-  defp check_equality([], []), do: :equal
-
-  defp check_equality([ahead | atail], [bhead | btail]) do
-    case ahead === bhead do
-      false -> :unequal
-      true -> check_equality(atail, btail)
+      a == b -> :equal
+      a |> contains(b) -> :superlist
+      b |> contains(a) -> :sublist
+      true -> :unequal
     end
   end
 
