@@ -3,44 +3,25 @@ defmodule Scrabble do
   Calculate the scrabble score for the word.
   """
   @spec score(String.t()) :: non_neg_integer
-  def score(word) do
-    word
-    |> String.upcase()
-    |> String.codepoints()
-    |> sum(0, the_values())
-  end
+  def score(word), do: word |> String.upcase |> count(0)
 
-  defp sum([], aggregate, _values) when is_integer(aggregate), do: aggregate
+  @mapping %{
+    ~c(AEIOULNRST) => 1,
+    ~c(DG) => 2,
+    ~c(BCMP) => 3,
+    ~c(FHVWY) => 4,
+    ~c(K) => 5,
+    ~c(JX) => 8,
+    ~c(QZ) => 10
+  }
 
-  defp sum([head | tail], aggregate, values) when is_integer(aggregate) do
-    case values[head] do
-      nil -> sum(tail, aggregate + 0, values)
-      val -> sum(tail, aggregate + val, values)
+  for {letters, score} <- @mapping do
+    for letter <- letters do
+      defp count(<<unquote(letter), rest::binary>>, acc), do: count(rest, acc + unquote(score))
     end
   end
 
-  defp the_values do
-    [
-      {"AEIOULNRST", 1},
-      {"DG", 2},
-      {"BCMP", 3},
-      {"FHVWY", 4},
-      {"K", 5},
-      {"JX", 8},
-      {"QZ", 10}
-    ]
-    |> List.foldl(Map.new(), fn {string, weight}, map ->
-      map_for_single_value(string, weight) |> Map.merge(map)
-    end)
-  end
+  defp count("", acc), do: acc
 
-  defp map_for_single_value(string, weight) do
-    string
-    |> String.upcase()
-    |> String.codepoints()
-    |> add(weight, Map.new())
-  end
-
-  defp add([], _, map), do: map
-  defp add([head | tail], weight, map), do: add(tail, weight, map |> Map.put(head, weight))
+  defp count(<<_, rest::binary>>, acc), do: count(rest, acc)
 end
