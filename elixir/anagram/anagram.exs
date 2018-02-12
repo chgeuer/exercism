@@ -4,24 +4,13 @@ defmodule Anagram do
   """
   @spec match(String.t(), [String.t()]) :: [String.t()]
   def match(base, candidates) do
-    target = base |> dict_from_word
+    comparable = &(&1 |> String.downcase() |> to_charlist() |> Enum.sort())
+    base_comparable = comparable.(base)
 
     candidates
-    |> Enum.map(&{&1, &1 |> dict_from_word})
-    |> Enum.filter(&(base |> String.downcase() != &1 |> elem(0) |> String.downcase() && target == &1 |> elem(1)))
+    |> Enum.reject(&(&1 |> String.downcase() == base |> String.downcase()))
+    |> Enum.map(&{&1, comparable.(&1)})
+    |> Enum.reject(&(base_comparable != &1 |> elem(1)))
     |> Enum.map(&(&1 |> elem(0)))
-  end
-
-  def dict_from_word(word) do
-    word
-    |> String.downcase()
-    |> String.codepoints()
-    |> aggregate(Map.new())
-  end
-
-  def aggregate([], map), do: map
-
-  def aggregate([h | t], map) do
-    t |> aggregate(map |> Map.get_and_update(h, &{&1, (&1 || 0) + 1}) |> elem(1))
   end
 end
