@@ -12,9 +12,10 @@ defmodule BracketPush do
   for {opener, closer} <- [{"{", "}"}, {"(", ")"}, {"[", "]"}, {"<", ">"}] do
     defp check([unquote(opener) | tail], stack), do: check(tail, [unquote(opener) | stack])
     defp check([unquote(closer) | tail], [unquote(opener) | stack]), do: check(tail, stack)
-    defp check([unquote(closer) | tail], stack), do: false
+    defp check([unquote(closer) | _], _), do: false
   end
 
   defp check([_head | tail], stack), do: check(tail, stack)
-  defp check([], stack), do: stack == []
+  defp check([], []), do: true
+  defp check([], _), do: false
 end
