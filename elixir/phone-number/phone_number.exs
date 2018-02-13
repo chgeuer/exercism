@@ -41,16 +41,32 @@ defmodule Phone do
     end
   end
 
-  for n <- ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] do
-    def scan_numbers(unquote(n) <> tail), do: unquote(n) <> scan_numbers(tail)
-  end
+  #
+  # Meta programming
+  #
+  # for n <- ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"], do: defp scan_numbers(unquote(n) <> tail), do: unquote(n) <> scan_numbers(tail)
+  # for n <- ["+", "(", ")", " ", "-", "."], do: defp scan_numbers(unquote(n) <> tail), do: scan_numbers(tail)
+  # defp scan_numbers(""), do: ""
+  # defp scan_numbers(_), do: @invalid
 
-  for n <- ["+", "(", ")", " ", "-", "."] do
-    def scan_numbers(unquote(n) <> tail), do: scan_numbers(tail)
-  end
+  #
+  # Guard clauses
+  #
+  @plus ?+
+  @space 0x20
+  @open ?(
+  @close ?)
+  @dash ?-
+  @dot ?.
 
-  def scan_numbers(""), do: ""
-  def scan_numbers(_), do: @invalid
+  defp scan_numbers(<<n::8>> <> tail) when n in [@plus, @space, @open, @close, @dash, @dot],
+    do: scan_numbers(tail)
+
+  defp scan_numbers(<<n::8>> <> tail) when n in [?0, ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9],
+    do: <<n::8>> <> scan_numbers(tail)
+
+  defp scan_numbers(<<>>), do: ""
+  defp scan_numbers(_), do: @invalid
 
   @doc """
   Extract the area code from a phone number
@@ -96,10 +112,9 @@ defmodule Phone do
   "(000) 000-0000"
   """
   @spec pretty(String.t()) :: String.t()
-  def pretty(raw),
-    do:
-      raw |> number()
-      |> (fn x ->
-            "(#{String.slice(x, 0, 3)}) #{String.slice(x, 3, 3)}-#{String.slice(x, 6, 4)}"
-          end).()
+  def pretty(raw), do: raw |> number() |> pretty_extract()
+
+  defp pretty_extract(<<area::3*8, exchange::3*8, subscriber::4*8>>) do
+    "(" <> <<area::3*8>> <> ") " <> <<exchange::3*8>> <> "-" <> <<subscriber::4*8>>
+  end
 end
