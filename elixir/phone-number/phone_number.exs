@@ -112,9 +112,10 @@ defmodule Phone do
   "(000) 000-0000"
   """
   @spec pretty(String.t()) :: String.t()
-  def pretty(raw), do: raw |> number() |> pretty_extract()
-
-  defp pretty_extract(<<area::3*8, exchange::3*8, subscriber::4*8>>) do
-    "(" <> <<area::3*8>> <> ") " <> <<exchange::3*8>> <> "-" <> <<subscriber::4*8>>
+  def pretty(raw) do
+    case raw |> number() do
+      <<area::bytes-size(3), exchange::bytes-size(3), subscriber::bytes-size(4)>> ->
+        "(" <> <<area::bytes-size(3)>> <> ") " <> <<exchange::bytes-size(3)>> <> "-" <> <<subscriber::bytes-size(4)>>
+    end
   end
 end
