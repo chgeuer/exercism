@@ -8,9 +8,7 @@ func Age(seconds float64, planet Planet) float64 {
 	return seconds / orbitalPeriodOf[planet]
 }
 
-var orbitalPeriodOf = computeOrbitalPeriods()
-
-func computeOrbitalPeriods() map[Planet]float64{
+var orbitalPeriodOf = (func() map[Planet]float64 {
 	planetYearInSeconds := func(orbitalPeriodDurationInEarthYears float64) float64 {
 		const (
 			earthYearInSeconds = 60 * 60 * 24 * 365.25
@@ -19,13 +17,13 @@ func computeOrbitalPeriods() map[Planet]float64{
 	}
 
 	return map[Planet]float64{
-		"Earth": planetYearInSeconds(1.0),
+		"Earth":   planetYearInSeconds(1.0),
 		"Mercury": planetYearInSeconds(0.2408467),
-		"Venus": planetYearInSeconds(0.61519726),
-		"Mars": planetYearInSeconds(1.8808158),
+		"Venus":   planetYearInSeconds(0.61519726),
+		"Mars":    planetYearInSeconds(1.8808158),
 		"Jupiter": planetYearInSeconds(11.862615),
-		"Saturn": planetYearInSeconds(29.447498),
-		"Uranus": planetYearInSeconds(84.016846),
+		"Saturn":  planetYearInSeconds(29.447498),
+		"Uranus":  planetYearInSeconds(84.016846),
 		"Neptune": planetYearInSeconds(164.79132),
 	}
-}
+})()
