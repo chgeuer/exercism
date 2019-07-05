@@ -1,15 +1,34 @@
-// This is a "stub" file.  It's a little start on your solution.
-// It's not a complete solution though; you have to write some code.
-
 // Package acronym should have a package comment that summarizes what it's about.
-// https://golang.org/doc/effective_go.html#commentary
 package acronym
 
-// Abbreviate should have a comment documenting it.
+import (
+	"regexp"
+	"strings"
+)
+
+// Abbreviate abbreviates words into a TLA.
 func Abbreviate(s string) string {
-	// Write some code here to pass the test suite.
-	// Then remove all the stock comments.
-	// They're here to help you get started but they only clutter a finished solution.
-	// If you leave them in, reviewers may protest!
-	return ""
+	// \\p{Ll} a lowercase letter that has an uppercase variant.
+	// \\p{Lu} an uppercase letter that has a lowercase variant.
+	// \\p{P}  any kind of punctuation character
+
+	l1 := regexp.MustCompile("([\\p{Ll}])([\\p{Lu}])").ReplaceAllString(s, "$1 $2")
+
+	l2 := strings.Replace(l1, "'", "", -1)
+
+	l3 := regexp.MustCompile("[\\p{P}\\s]").Split(l2, -1)
+
+	l4 := make([]string, 0)
+	for i := 0; i < len(l3); i++ {
+		runes := []rune(l3[i])
+		if len(runes) > 0 {
+			l4 = append(l4, string(runes[0]))
+		}
+	}
+
+	l5 := strings.Join(l4, "")
+
+	l6 := strings.ToUpper(l5)
+
+	return l6
 }
