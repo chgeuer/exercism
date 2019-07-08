@@ -6,10 +6,10 @@ import (
 )
 
 // Use the ResourceOpener to handle some string
-func Use(o ResourceOpener, input string) (e error) {
-	var resourceOpener Resource
+func Use(resourceOpener ResourceOpener, input string) (e error) {
+	var resource Resource
 	for {
-		resourceOpener, e = o()
+		resource, e = resourceOpener()
 		if e == nil {
 			break
 		}
@@ -17,16 +17,16 @@ func Use(o ResourceOpener, input string) (e error) {
 		case TransientError:
 			continue
 		default:
-			return
+			return // e is not nill, and not a TransientError
 		}
 	}
-	defer resourceOpener.Close()
+	defer resource.Close()
 	defer func() {
 		if r := recover(); r != nil {
 			switch r.(type) {
 			case FrobError:
 				fe := FrobError(r.(FrobError))
-				resourceOpener.Defrob(fe.defrobTag)
+				resource.Defrob(fe.defrobTag)
 				e = fe
 			case string:
 				e = errors.New(r.(string))
@@ -37,7 +37,7 @@ func Use(o ResourceOpener, input string) (e error) {
 		}
 	}()
 
-	resourceOpener.Frob(input)
+	resource.Frob(input)
 
 	e = nil
 	return
