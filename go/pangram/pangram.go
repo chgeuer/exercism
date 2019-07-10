@@ -4,8 +4,7 @@ import (
 	"strings"
 )
 
-const testVersion = 2
-
+// IsPangram returns true if the input string is a Pangram.
 func IsPangram(input string) bool {
 	m := make(map[rune]bool)
 	for _, r := range []rune(strings.ToUpper(input)) {
