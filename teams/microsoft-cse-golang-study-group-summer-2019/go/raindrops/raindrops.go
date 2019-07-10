@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Convert a number to a string, the contents of which depend on the number's factors.
 func Convert(n int) string {
 	sli := make([]string, 3)
 	if n%3 == 0 {
