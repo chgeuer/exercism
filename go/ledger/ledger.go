@@ -12,6 +12,7 @@ type Entry struct {
 	Change      int // in cents
 }
 
+// FormatLedger formats a ledger into a string.
 func FormatLedger(currency string, locale string, entries []Entry) (string, error) {
 	var entriesCopy []Entry
 	for _, e := range entries {
