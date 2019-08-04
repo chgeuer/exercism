@@ -51,6 +51,20 @@ func TestBasicCompute2(t *testing.T) {
 	assertCellValue(t, c, 12, "c.Value() isn't properly computed when second input cell value changes")
 }
 
+func TestChristian(t *testing.T) {
+	r := New()
+	i := r.CreateInput(1)
+	p1 := r.CreateCompute1(i, func(v int) int { return v + 1 })
+	add := r.CreateCompute2(i, p1, func(a, b int) int { return a + b })
+	p2 := r.CreateCompute1(add, func(a int) int { return a + 1 })
+	assertCellValue(t, p1, 2, "p1.Value()")
+	assertCellValue(t, p2, 4, "p2.Value()")
+	i.SetValue(2)
+	assertCellValue(t, p1, 3, "p1.Value()")
+	assertCellValue(t, p2, 6, "p2.Value()")
+
+}
+
 // Compute 2 cells can depend on compute 1 cells.
 func TestCompute2Diamond(t *testing.T) {
 	r := New()
