@@ -5,8 +5,11 @@ fn pluralize_bottle(n: i32, sentence_beginning: bool) -> String {
         (0, true) => "No more bottles".to_string(),
         (0, false) => "no more bottles".to_string(),
         (1, _) => "1 bottle".to_string(),
-        (2i32..=MAX, _) => format!("{} bottles", n),
-        (MIN..=-1i32, _) => panic!(""),
+        (n, _) if n >= 2 => format!("{} bottles", n),
+        (n, _) if n < 0 => panic!(""),
+        // (_, _) => panic!("Can never happen"),
+        // (2i32..=MAX, _) => format!("{} bottles", n),
+        // (MIN..=-1i32, _) => panic!(""),
     }
 }
 
