@@ -6,7 +6,7 @@ pub fn reply(message: &str) -> &str {
 
     let is_empty = message == "";
     let is_yelling = Regex::new(r"[A-Za-z]").unwrap().is_match(message)
-        && message == message.clone().to_uppercase();
+        && message == message.to_uppercase();
     let is_question = message.ends_with('?');
 
     match (is_empty, is_yelling, is_question) {
