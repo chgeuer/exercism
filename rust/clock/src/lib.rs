@@ -32,7 +32,7 @@ impl Clock {
                 h => h,
             },
             minutes: match minutes % 60 {
-                m if m < 0 => m + 60
+                m if m < 0 => m + 60,
                 m => m,
             },
         }
