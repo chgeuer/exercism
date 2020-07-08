@@ -1,14 +1,7 @@
 -module(bob).
 
 -export([response/1]).
-
 -spec response(string()) -> string().
-
-% "" -> 'Fine. Be that way!'
-% Ask question ->'Sure.'
-% Yell -> 'Whoa, chill out!'
-% Yell Question: 'Calm down, I know what I'm doing!'
-% _ -> 'Whatever.'
 
 has_letters([]) -> false;
 has_letters([H|T]) ->
@@ -22,14 +15,23 @@ response(String) ->
 	Reverse = string:reverse(S),
 	ReverseUpper = string:uppercase(Reverse),
 	HasLetters = has_letters(S),
-	LastChar = string:substr(Reverse, 1, 1),
 
-	X = case { ReverseUpper, HasLetters, LastChar } of
-		{ "", _, _ } -> "Fine. Be that way!";
-		{ Reverse, _, "?" } -> "Calm down, I know what I'm doing!";
-		{ _, _, "?" } -> "Sure.";
-		{ Reverse, true, _ } -> "Whoa, chill out!";
-		_ -> "Whatever."
+	IsQuestion = case ReverseUpper of
+	    "?" ++ _ -> true;
+	    _ -> false
 	end,
-	% io:format("\"~s\" ---> \"~s\" ~n", [S, X]),
-	X.
+
+	{ IsEmpty, IsYelling } = case ReverseUpper of
+	   "" ->      { true,  false };
+	   Reverse -> { false, HasLetters };
+	   _ ->       { false, false }
+	end,
+
+	case { IsEmpty, IsQuestion, IsYelling } of
+		{ true, _, _ }     -> "Fine. Be that way!";
+		{ _, true, false } -> "Sure.";
+		{ _, true, true  } -> "Calm down, I know what I'm doing!";
+		{ _, false, true } -> "Whoa, chill out!";
+		_                  -> "Whatever."
+	end.
+
